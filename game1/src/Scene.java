@@ -33,7 +33,7 @@ public class Scene {
     }
     public static void startGame(){
         Scanner scan = new Scanner(System.in);
-        int whitepawns = 12, blackpawns = 12;
+        int whitepawns = 12, blackpawns = 1;
         while(whitepawns != 0 || blackpawns != 0){
             printScene();
             System.out.println("Pawns left:\nwhite:" + whitepawns + " black:" + blackpawns);
