@@ -31,7 +31,7 @@ public class Scene {
         }
         System.out.println("  0 1 2 3 4 5 6 7");
     }
-    public static void begin(){
+    public static void startGame(){
         Scanner scan = new Scanner(System.in);
         int whitepawns = 12, blackpawns = 12;
         while(whitepawns != 0 || blackpawns != 0){
@@ -45,6 +45,11 @@ public class Scene {
 
             blackMove(scan, whitepawns);
         }
+        if(blackpawns == 0){
+            System.out.printf("Player 1 wins!");
+        }else{
+            System.out.printf("Player 2 wins!");
+        }
         scan.close();
     }
     public static int whiteMove(Scanner scan, int blackpawns){
@@ -55,7 +60,7 @@ public class Scene {
             System.out.println("Select column and row number of your pawn.");
             col = scan.nextInt();
             row = scan.nextInt();
-            if( col >= 0 && col < 8 && row >= 0 && row < 8 && spots[row][col].equals("●")){
+            if(withinBounds(row, col) && spots[row][col].equals("●")){
                 correct = true;
             }
             else{
@@ -68,7 +73,7 @@ public class Scene {
             System.out.println("Where would you like to move?");
             move_col = scan.nextInt();
             move_row = scan.nextInt();
-            if(move_col < 8 && move_col >= 0 && move_row >= 0 && move_row < 8 && move_row == row-1 && (move_col == col+1 || move_col == col-1)){
+            if(withinBounds(move_row, move_col) && move_row == row-1 && (move_col == col+1 || move_col == col-1)){
                 correct = true;
             }
             else{
@@ -99,7 +104,7 @@ public class Scene {
             System.out.println("Select column and row number of your pawn.");
             col = scan.nextInt();
             row = scan.nextInt();
-            if( col >= 0 && col < 8 && row >= 0 && row < 8 && spots[row][col].equals("○")){
+            if(withinBounds(row, col) && spots[row][col].equals("○")){
                 correct = true;
             }
             else{
@@ -112,7 +117,7 @@ public class Scene {
             System.out.println("Where would you like to move?");
             move_col = scan.nextInt();
             move_row = scan.nextInt();
-            if(move_col < 8 && move_col >= 0 && move_row >= 0 && move_row < 8 && move_row == row+1 && (move_col == col+1 || move_col == col-1)){
+            if(withinBounds(move_row, move_col) && move_row == row+1 && (move_col == col+1 || move_col == col-1)){
                 correct = true;
             }
             else{
@@ -133,5 +138,11 @@ public class Scene {
         }
         spots[move_row][move_col] = "○";
         return whitepawns;
+    }
+    public static boolean withinBounds(int i, int j){
+        if(i >= 0 && i < 8 && j >= 0 && j < 8){
+            return true;
+        }
+        return false;
     }
 }
