@@ -33,24 +33,27 @@ public class Scene {
     }
     public static void startGame(){
         Scanner scan = new Scanner(System.in);
-        int whitepawns = 12, blackpawns = 1;
+        int whitepawns = 12, blackpawns = 12;
         while(whitepawns != 0 || blackpawns != 0){
             printScene();
             System.out.println("Pawns left:\nwhite:" + whitepawns + " black:" + blackpawns);
 
             blackpawns = whiteMove(scan, blackpawns);
 
+            printScene();
+
             if(blackpawns == 0){
                 System.out.printf("Player 1 wins!");
                 break;
             }
 
-            printScene();
+
             System.out.println("Pawns left:\nwhite:" + whitepawns + " black:" + blackpawns);
 
-            blackMove(scan, whitepawns);
+            whitepawns = blackMove(scan, whitepawns);
         }
         if(whitepawns == 0){
+            printScene();
             System.out.printf("Player 2 wins!");
         }
         scan.close();
@@ -76,29 +79,30 @@ public class Scene {
             System.out.println("Where would you like to move?");
             move_col = scan.nextInt();
             move_row = scan.nextInt();
-            boolean kill = false;
             if(withinBounds(move_row, move_col) && move_row == row-1 && (move_col == col+1 || move_col == col-1)){
                 //kill
-
-                correct = true;
-            }
-            else{
+                if(spots[move_row][move_col].equals("○")){
+                    if(spots[move_row - 1][move_col + (move_col - col)].equals("□")){
+                        spots[move_row - 1][move_col + (move_col - col)] = "●";
+                        spots[move_row][move_col] = "□";
+                        spots[row][col] = "□";
+                        return blackpawns-1;
+                    }else{
+                        correct = false;
+                        System.out.println("Invalid coordinates.");
+                    }
+                }else{
+                    correct = true;
+                }
+            }else{
                 correct = false;
                 System.out.println("Invalid coordinates.");
             }
+
         }while(!correct);
         //coords are correct, change spots
-            spots[row][col] = "□";
-        //kill
-        if(spots[move_row][move_col] == "○" && spots[move_row - 1][move_row + (move_row - row)].equals("□")){
-            spots[move_row + 1][move_row + (move_row - row)] = "●";
-            spots[move_row][move_col] = "□";
-            return blackpawns-1;
-        }else if(spots[move_row][move_col].equals("□")){
-            spots[move_row][move_col] = "●";
-        }else{
-            
-        }
+        spots[row][col] = "□";
+        spots[move_row][move_col] = "●";
 
         return blackpawns;
     }
@@ -120,30 +124,36 @@ public class Scene {
             }
         }while(!correct);
 
+
         do{
             System.out.println("Where would you like to move?");
             move_col = scan.nextInt();
             move_row = scan.nextInt();
             if(withinBounds(move_row, move_col) && move_row == row+1 && (move_col == col+1 || move_col == col-1)){
-                correct = true;
-            }
-            else{
+                //kill
+                if(spots[move_row][move_col].equals("●")){
+                    if(spots[move_row + 1][move_col + (move_col - col)].equals("□")){
+                        spots[move_row + 1][move_col + (move_col - col)] = "○";
+                        spots[move_row][move_col] = "□";
+                        spots[row][col] = "□";
+                        return whitepawns-1;
+                    }else{
+                        correct = false;
+                        System.out.println("Invalid coordinates.");
+                    }
+                }else{
+                    correct = true;
+                }
+            }else{
                 correct = false;
                 System.out.println("Invalid coordinates.");
             }
+
         }while(!correct);
         //coords are correct, change spots
-        if((row + col) %2 == 1) {
-            spots[row][col] = "□";
-        }else{
-            spots[row][col] = "■";
-        }
-        //kill
-        if(spots[move_row][move_col] == "●"){
-            spots[move_row][move_col] = "○";
-            return whitepawns-1;
-        }
+        spots[row][col] = "□";
         spots[move_row][move_col] = "○";
+
         return whitepawns;
     }
     public static boolean withinBounds(int i, int j){
